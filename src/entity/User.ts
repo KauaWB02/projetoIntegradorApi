@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn } from 'typeorm';
 import { v4 as uuid } from 'uuid';
+
 @Entity()
-export class User {
+export class Users {
   @PrimaryColumn()
   id: string;
 
@@ -19,6 +20,9 @@ export class User {
 
   @Column()
   type: string;
+
+  @Column()
+  deleted_at: string;
 
   constructor() {
     if (!this.id) {
