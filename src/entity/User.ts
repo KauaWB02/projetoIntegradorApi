@@ -27,7 +27,6 @@ export class Users {
   constructor() {
     if (!this.id) {
       this.id = uuid();
-      console.log(this.id)
     }
   }
 }

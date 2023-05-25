@@ -1,32 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { IUser } from '../../../../interfaces/user/user.interface';
-import { AppDataSource } from '../../../../database/connection';
-import { Users } from '../../../../entity/User';
 import { IReturn } from '../../../../interfaces/user/return.interface';
-import { Repository } from 'typeorm';
+import { UserModel } from '../../../../database/userModel';
+import { threadId } from 'worker_threads';
 
 @Injectable()
 export class UserService {
-  private conn: Repository<Users>;
-  constructor() {
-    this.conn = AppDataSource.getRepository(Users);
-
-  }
-
+  constructor(private readonly userModel: UserModel) {}
 
   async getUsers(): Promise<IReturn> {
-
-
     const objectReturn: IReturn = {
       message: '',
       error: '',
+      data: [],
       status: 200,
     };
     try {
+      const users = await this.userModel.findAllUsers();
 
-      const users = await this.conn.find();
-
-      objectReturn.message = users;
+      objectReturn.message = 'Listando todos os usuários cadastrados';
+      objectReturn.data = users;
     } catch (e) {
       objectReturn.message = 'Erro ao tentar buscar usuários';
       objectReturn.error = e.message;
@@ -36,25 +29,57 @@ export class UserService {
     }
   }
 
-  async createUser(body: IUser): Promise<IReturn> {
+  async getUserById(idUser: string): Promise<IReturn> {
     const objectReturn: IReturn = {
       message: '',
+      data: [],
       error: '',
       status: 200,
     };
     try {
-      const { name, email, password, type } = body;
+      if (!idUser)
+        throw { message: `Parametro 'idUser' obrigatório`, status: 400 };
 
-      if (!name) throw { message: `Campo 'name' é obrigatório`, status: 400 };
-      if (!email) throw { message: `Campo 'e-mail' é obrigatório`, status: 400 };
-      if (!password) throw { message: `Campo 'password' é obrigatório`, status: 400 };
-      if (!type) throw { message: `Campo 'type' é obrigatório`, status: 400 };
+      const user = await this.userModel.findUserById(idUser);
 
-      let id = '4aa081e2-26d9-41b2-956a-dcd42cf8d355'
+      if (!user) throw { message: `Usuário não encontrado!`, status: 500 };
 
-      await this.conn.save({ id, name, email, password, type });
-      objectReturn.message = `Usuário ${name} cadastrado`;
+      objectReturn.message = `Usuário ${user.name} encontrado!`;
+      objectReturn.data = user;
+    } catch (e) {
+      objectReturn.message = 'Erro ao buscar usuário';
+      objectReturn.error = e.message;
+      objectReturn.status = e.status;
+      throw e;
+    } finally {
+      return objectReturn;
+    }
+  }
 
+  async createUser(body: IUser): Promise<IReturn> {
+    const objectReturn: IReturn = {
+      message: '',
+      data: [],
+      error: '',
+      status: 200,
+    };
+    try {
+      //   const { name, email, password, type } = body;
+      //   if (!name) throw { message: `Campo 'name' é obrigatório`, status: 400 };
+      //   if (!email)
+      //     throw { message: `Campo 'e-mail' é obrigatório`, status: 400 };
+      //   if (!password)
+      //     throw { message: `Campo 'password' é obrigatório`, status: 400 };
+      //   if (!type) throw { message: `Campo 'type' é obrigatório`, status: 400 };
+      //   const user = this.conn.create({
+      //     name: name,
+      //     email: email,
+      //     password: password,
+      //     type: type,
+      //   });
+      //   await this.conn.save(user);
+      //   objectReturn.message = `Usuário ${name} cadastrado`;
+      //   objectReturn.data = user;
     } catch (e) {
       objectReturn.message = 'Erro ao criar um usuário';
       objectReturn.error = e.message;
@@ -63,4 +88,62 @@ export class UserService {
       return objectReturn;
     }
   }
+
+  async updateUser(body: IUser, idUser: string): Promise<IReturn> {
+    const objectReturn: IReturn = {
+      message: '',
+      data: [],
+      error: '',
+      status: 200,
+    };
+    try {
+      const { name, email, password, type } = body;
+
+      const data = await this.userModel.findUserById(idUser);
+
+      if (!data) throw { message: `Usuário não encontrado!`, status: 500 };
+
+      data.name = name || data.name;
+      data.email = email || data.email;
+      data.password = password || data.password;
+      data.type = type || data.type;
+
+      const updated = await this.userModel.updateUser(data, idUser);
+
+      if (!updated)
+        throw {
+          message: `Algo aconteceu ao tentar atualizar o usuário [${data.id}]`,
+          status: 500,
+        };
+
+      objectReturn.message = `Usuário ${data.name} Atualizado!`;
+      objectReturn.data = data;
+    } catch (e) {
+      objectReturn.message = 'Erro ao atualizar o usuário';
+      objectReturn.error = e.message;
+      objectReturn.status = e.status;
+    } finally {
+      return objectReturn;
+    }
+  }
+
+  // async deleteUser(idUser: string): Promise<IReturn> {
+  //   const objectReturn: IReturn = {
+  //     message: '',
+  //     data: [],
+  //     error: '',
+  //     status: 200,
+  //   };
+  //   try {
+  //     await this.conn.update({ id: idUser }, { deleted_user: 'D' });
+  //     objectReturn.message = `Usuário com ID [${idUser}] excluido`;
+  //   } catch (e) {
+  //     console.log(e);
+  //     objectReturn.message = 'Erro ao excluir um usuário';
+  //     objectReturn.error = e.message;
+  //     objectReturn.status = e.status;
+  //   } finally {
+  //     return objectReturn;
+  //   }
+  // }
 }

@@ -1,7 +1,8 @@
 import { IUser } from './user.interface';
 
 export interface IReturn {
-  message: Array<IUser> | IUser | string;
+  message: string;
+  data: Array<IUser> | IUser;
   error: string;
   status: number;
 }
