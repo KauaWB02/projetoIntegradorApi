@@ -6,7 +6,7 @@ import { threadId } from 'worker_threads';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userModel: UserModel) {}
+  constructor(private readonly userModel: UserModel) { }
 
   async getUsers(): Promise<IReturn> {
     const objectReturn: IReturn = {
@@ -64,22 +64,17 @@ export class UserService {
       status: 200,
     };
     try {
-      //   const { name, email, password, type } = body;
-      //   if (!name) throw { message: `Campo 'name' é obrigatório`, status: 400 };
-      //   if (!email)
-      //     throw { message: `Campo 'e-mail' é obrigatório`, status: 400 };
-      //   if (!password)
-      //     throw { message: `Campo 'password' é obrigatório`, status: 400 };
-      //   if (!type) throw { message: `Campo 'type' é obrigatório`, status: 400 };
-      //   const user = this.conn.create({
-      //     name: name,
-      //     email: email,
-      //     password: password,
-      //     type: type,
-      //   });
-      //   await this.conn.save(user);
-      //   objectReturn.message = `Usuário ${name} cadastrado`;
-      //   objectReturn.data = user;
+      const { name, email, password, type } = body;
+      if (!name) throw { message: `Campo 'name' é obrigatório`, status: 400 };
+      if (!email)
+        throw { message: `Campo 'e-mail' é obrigatório`, status: 400 };
+      if (!password)
+        throw { message: `Campo 'password' é obrigatório`, status: 400 };
+      if (!type) throw { message: `Campo 'type' é obrigatório`, status: 400 };
+      let userCreate = await this.userModel.createUser(body);
+
+      objectReturn.message = `Usuário ${userCreate.name} cadastrado`;
+      objectReturn.data = userCreate;
     } catch (e) {
       objectReturn.message = 'Erro ao criar um usuário';
       objectReturn.error = e.message;
@@ -127,23 +122,32 @@ export class UserService {
     }
   }
 
-  // async deleteUser(idUser: string): Promise<IReturn> {
-  //   const objectReturn: IReturn = {
-  //     message: '',
-  //     data: [],
-  //     error: '',
-  //     status: 200,
-  //   };
-  //   try {
-  //     await this.conn.update({ id: idUser }, { deleted_user: 'D' });
-  //     objectReturn.message = `Usuário com ID [${idUser}] excluido`;
-  //   } catch (e) {
-  //     console.log(e);
-  //     objectReturn.message = 'Erro ao excluir um usuário';
-  //     objectReturn.error = e.message;
-  //     objectReturn.status = e.status;
-  //   } finally {
-  //     return objectReturn;
-  //   }
-  // }
+  async deleteUser(idUser: string): Promise<IReturn> {
+    const objectReturn: IReturn = {
+      message: '',
+      data: [],
+      error: '',
+      status: 200,
+    };
+    try {
+      const data: IUser = {
+        deleted_user: 'D',
+      }
+      const updated = await this.userModel.updateUser(data, idUser);
+
+      if (!updated)
+        throw {
+          message: `Algo aconteceu ao tentar excluir o usuário [${data.id}]`,
+          status: 500,
+        };
+      objectReturn.message = `Usuário com ID [${idUser}] excluido`;
+    } catch (e) {
+      console.log(e);
+      objectReturn.message = 'Erro ao excluir um usuário';
+      objectReturn.error = e.message;
+      objectReturn.status = e.status;
+    } finally {
+      return objectReturn;
+    }
+  }
 }

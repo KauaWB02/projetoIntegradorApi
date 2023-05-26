@@ -23,6 +23,25 @@ export class UserModel {
     }
   }
 
+  public async createUser(body: IUser): Promise<IUser> {
+
+    try {
+      const user = this.conn.create({
+        name: body.name,
+        email: body.email,
+        password: body.password,
+        type: body.type,
+      });
+      await this.conn.save(user);
+      return user;
+    } catch (e) {
+      throw {
+        message: 'Ocorreu um erro ao tentar criar usuário',
+        status: 500,
+      };
+    }
+  }
+
   public async findUserById(idUser: string): Promise<IUser> {
     try {
       const user = await this.conn.findOneBy({ id: idUser });
@@ -52,4 +71,5 @@ export class UserModel {
       };
     }
   }
+
 }

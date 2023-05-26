@@ -1,11 +1,11 @@
-import { Controller, Get, Post, Body, Param, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common';
 import { UserService } from './service/user/user.service';
 import { IUser } from '../../interfaces/user/user.interface';
 import { IReturn } from '../../interfaces/user/return.interface';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Get()
   getAllUsers(): Promise<IReturn> {
@@ -27,5 +27,11 @@ export class UserController {
     @Param('idUser') idUser: string,
   ): Promise<IReturn> {
     return this.userService.updateUser(body, idUser);
+  }
+  @Delete('delete/:idUser')
+  deleteUser(
+    @Param('idUser') idUser: string,
+  ): Promise<IReturn> {
+    return this.userService.deleteUser(idUser);
   }
 }
