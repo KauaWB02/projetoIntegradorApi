@@ -23,8 +23,33 @@ export class UserModel {
     }
   }
 
-  public async createUser(body: IUser): Promise<IUser> {
+  public async findUserById(idUser: string): Promise<IUser> {
+    try {
+      const user = await this.conn.findOneBy({ id: idUser });
+      return user;
+    } catch (e) {
+      throw {
+        message: 'Ocorreu um erro ao tentar buscar por usuário',
+        status: 500,
+      };
+    }
+  }
 
+  public async findUserByEmail(email: string): Promise<IUser> {
+    try {
+      const user = await this.conn.findOneBy({
+        email: email,
+      });
+      return user;
+    } catch (e) {
+      throw {
+        message: 'Ocorreu um erro ao tentar buscar por usuário',
+        status: 500,
+      };
+    }
+  }
+
+  public async createUser(body: IUser): Promise<IUser> {
     try {
       const user = this.conn.create({
         name: body.name,
@@ -37,18 +62,6 @@ export class UserModel {
     } catch (e) {
       throw {
         message: 'Ocorreu um erro ao tentar criar usuário',
-        status: 500,
-      };
-    }
-  }
-
-  public async findUserById(idUser: string): Promise<IUser> {
-    try {
-      const user = await this.conn.findOneBy({ id: idUser });
-      return user;
-    } catch (e) {
-      throw {
-        message: 'Ocorreu um erro ao tentar buscar por usuário',
         status: 500,
       };
     }
@@ -71,5 +84,4 @@ export class UserModel {
       };
     }
   }
-
 }

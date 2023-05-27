@@ -5,6 +5,10 @@ export const server = {
   port: process.env.SERVER_PORT,
 };
 
+export const jwt = {
+  secret: process.env.SECRET_KEY,
+};
+
 export const dataBase = {
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT) || 3306,

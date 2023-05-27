@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { IUser } from '../../../../interfaces/user/user.interface';
 import { IReturn } from '../../../../interfaces/user/return.interface';
 import { UserModel } from '../../../../database/userModel';
-import { threadId } from 'worker_threads';
+import bcrypt = require('bcrypt');
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userModel: UserModel) { }
+  constructor(private readonly userModel: UserModel) {}
 
   async getUsers(): Promise<IReturn> {
     const objectReturn: IReturn = {
@@ -71,7 +71,18 @@ export class UserService {
       if (!password)
         throw { message: `Campo 'password' é obrigatório`, status: 400 };
       if (!type) throw { message: `Campo 'type' é obrigatório`, status: 400 };
-      let userCreate = await this.userModel.createUser(body);
+
+      const saltGer = await bcrypt.genSalt(10);
+
+      console.log(saltGer);
+
+      const cadastroUser: IUser = {
+        name: name,
+        email: email,
+        password: await bcrypt.hash(password, saltGer),
+        type: type,
+      };
+      const userCreate = await this.userModel.createUser(cadastroUser);
 
       objectReturn.message = `Usuário ${userCreate.name} cadastrado`;
       objectReturn.data = userCreate;
@@ -132,7 +143,7 @@ export class UserService {
     try {
       const data: IUser = {
         deleted_user: 'D',
-      }
+      };
       const updated = await this.userModel.updateUser(data, idUser);
 
       if (!updated)
