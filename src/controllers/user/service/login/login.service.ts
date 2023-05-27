@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { IReturn } from '../../../../interfaces/user/return.interface';
 import { UserModel } from '../../../../database/userModel';
 import { IUser } from '../../../../interfaces/user/user.interface';
