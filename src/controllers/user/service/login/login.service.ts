@@ -14,8 +14,6 @@ export class LoginService {
     const objectReturn: IReturn = {
       message: '',
       data: [],
-      error: '',
-      status: 200,
     };
     try {
       const { email, password } = body;

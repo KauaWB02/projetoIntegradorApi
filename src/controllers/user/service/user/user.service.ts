@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { IUser } from '../../../../interfaces/user/user.interface';
 import { IReturn } from '../../../../interfaces/user/return.interface';
 import { UserModel } from '../../../../database/userModel';
@@ -11,21 +11,22 @@ export class UserService {
   async getUsers(): Promise<IReturn> {
     const objectReturn: IReturn = {
       message: '',
-      error: '',
       data: [],
-      status: 200,
     };
     try {
       const users = await this.userModel.findAllUsers();
 
       objectReturn.message = 'Listando todos os usuários cadastrados';
       objectReturn.data = users;
-    } catch (e) {
-      objectReturn.message = 'Erro ao tentar buscar usuários';
-      objectReturn.error = e.message;
-      objectReturn.status = 400;
-    } finally {
       return objectReturn;
+    } catch (e) {
+      throw new HttpException(
+        {
+          status: e.status,
+          error: e.message,
+        },
+        e.status,
+      );
     }
   }
 
@@ -33,8 +34,6 @@ export class UserService {
     const objectReturn: IReturn = {
       message: '',
       data: [],
-      error: '',
-      status: 200,
     };
     try {
       if (!idUser)
@@ -46,13 +45,15 @@ export class UserService {
 
       objectReturn.message = `Usuário ${user.name} encontrado!`;
       objectReturn.data = user;
-    } catch (e) {
-      objectReturn.message = 'Erro ao buscar usuário';
-      objectReturn.error = e.message;
-      objectReturn.status = e.status;
-      throw e;
-    } finally {
       return objectReturn;
+    } catch (e) {
+      throw new HttpException(
+        {
+          status: e.status,
+          error: e.message,
+        },
+        e.status,
+      );
     }
   }
 
@@ -60,8 +61,6 @@ export class UserService {
     const objectReturn: IReturn = {
       message: '',
       data: [],
-      error: '',
-      status: 200,
     };
     try {
       const { name, email, password, type } = body;
@@ -74,8 +73,6 @@ export class UserService {
 
       const saltGer = await bcrypt.genSalt(10);
 
-      console.log(saltGer);
-
       const cadastroUser: IUser = {
         name: name,
         email: email,
@@ -86,12 +83,15 @@ export class UserService {
 
       objectReturn.message = `Usuário ${userCreate.name} cadastrado`;
       objectReturn.data = userCreate;
-    } catch (e) {
-      objectReturn.message = 'Erro ao criar um usuário';
-      objectReturn.error = e.message;
-      objectReturn.status = e.status;
-    } finally {
       return objectReturn;
+    } catch (e) {
+      throw new HttpException(
+        {
+          status: e.status,
+          error: e.message,
+        },
+        e.status,
+      );
     }
   }
 
@@ -99,8 +99,6 @@ export class UserService {
     const objectReturn: IReturn = {
       message: '',
       data: [],
-      error: '',
-      status: 200,
     };
     try {
       const { name, email, password, type } = body;
@@ -124,12 +122,15 @@ export class UserService {
 
       objectReturn.message = `Usuário ${data.name} Atualizado!`;
       objectReturn.data = data;
-    } catch (e) {
-      objectReturn.message = 'Erro ao atualizar o usuário';
-      objectReturn.error = e.message;
-      objectReturn.status = e.status;
-    } finally {
       return objectReturn;
+    } catch (e) {
+      throw new HttpException(
+        {
+          status: e.status,
+          error: e.message,
+        },
+        e.status,
+      );
     }
   }
 
@@ -137,8 +138,6 @@ export class UserService {
     const objectReturn: IReturn = {
       message: '',
       data: [],
-      error: '',
-      status: 200,
     };
     try {
       const data: IUser = {
@@ -152,13 +151,16 @@ export class UserService {
           status: 500,
         };
       objectReturn.message = `Usuário com ID [${idUser}] excluido`;
-    } catch (e) {
-      console.log(e);
-      objectReturn.message = 'Erro ao excluir um usuário';
-      objectReturn.error = e.message;
-      objectReturn.status = e.status;
-    } finally {
+
       return objectReturn;
+    } catch (e) {
+      throw new HttpException(
+        {
+          status: e.status,
+          error: e.message,
+        },
+        e.status,
+      );
     }
   }
 }
