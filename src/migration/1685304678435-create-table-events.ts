@@ -1,48 +1,72 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateTableUser1684866962855 implements MigrationInterface {
+export class CreateTableEvents1685304678435 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'users',
+        name: 'events',
         columns: [
           {
             name: 'id',
             type: 'varchar',
             isPrimary: true,
             isUnique: true,
-            isNullable: true,
+            isNullable: false,
           },
           {
-            name: 'name',
+            name: 'id_user',
             type: 'varchar',
             isNullable: false,
           },
           {
-            name: 'email',
-            type: 'varchar',
-            isNullable: false,
-            isUnique: true,
-          },
-          {
-            name: 'password',
+            name: 'title',
             type: 'varchar',
             isNullable: false,
           },
           {
-            name: 'deleted_user',
+            name: 'description',
+            type: 'varchar',
+            isNullable: false,
+          },
+          {
+            name: 'dth_start',
+            type: 'varchar',
+            isNullable: false,
+          },
+          {
+            name: 'description_switching',
+            type: 'varchar',
+            isNullable: false,
+          },
+          {
+            name: 'amount_teams',
+            type: 'varchar',
+            isNullable: false,
+          },
+          {
+            name: 'first_place',
+            type: 'varchar',
+          },
+          {
+            name: 'second_place',
+            type: 'varchar',
+          },
+          {
+            name: 'third_teams',
+            type: 'varchar',
+          },
+          {
+            name: 'ended',
             type: 'enum',
-            enum: ['D', 'A'],
-            default: '"A"',
+            enum: ['N', 'S'],
+            default: '"N"',
           },
           {
-            name: 'type',
-            type: 'enum',
-            enum: ['C', 'J'],
-            isNullable: false,
+            name: 'ended_at',
+            type: 'timestamp',
           },
           {
-            name: 'deleted_at',
+            name: 'created_at',
             type: 'timestamp',
             default: 'now()',
           },
