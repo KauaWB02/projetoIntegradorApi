@@ -60,6 +60,7 @@ export class UserModel {
       await this.conn.save(user);
       return user;
     } catch (e) {
+      console.log(e);
       throw {
         message: 'Ocorreu um erro ao tentar criar usuário',
         status: 500,

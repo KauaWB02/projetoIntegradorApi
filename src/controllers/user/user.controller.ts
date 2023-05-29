@@ -9,8 +9,10 @@ import {
 } from '@nestjs/common';
 import { UserService } from './service/user/user.service';
 import { IUser } from '../../interfaces/user/user.interface';
-import { IReturn } from '../../interfaces/user/return.interface';
+import { IReturn } from '../../interfaces/return.interface';
 import { LoginService } from './service/login/login.service';
+import { Events } from '../../entity/Event';
+import { AppDataSource } from '../../database/connection';
 
 @Controller('users')
 export class UserController {
@@ -18,6 +20,15 @@ export class UserController {
     private readonly userService: UserService,
     private readonly loginService: LoginService,
   ) {}
+
+  @Get('tete/teqwe')
+  teste() {
+    const conn = AppDataSource.getRepository(Events);
+
+    const evento = conn.find({ relations: { user: true } });
+
+    return evento;
+  }
 
   @Post('login')
   loginUser(@Body() body: IUser): Promise<IReturn> {

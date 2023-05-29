@@ -1,14 +1,14 @@
-import { Entity, Column, PrimaryColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { v4 as uuid } from 'uuid';
-import { User } from './User';
+import { Users } from './User';
 
 @Entity()
-export class Event {
+export class Events {
   @PrimaryColumn()
   id: string;
 
-  @ManyToOne(() => User, (user) => user.id)
-  id_user: User;
+  @Column({ name: 'user_id' })
+  userId: string;
 
   @Column()
   title: string;
@@ -29,10 +29,10 @@ export class Event {
   first_place: string;
 
   @Column()
-  second_teams: string;
+  second_place: string;
 
   @Column()
-  third_teams: string;
+  third_place: string;
 
   @Column()
   ended: string;
@@ -44,7 +44,11 @@ export class Event {
   created_at: Date;
 
   @Column()
-  update_at: Date;
+  updated_at: Date;
+
+  @ManyToOne(() => Users, (user) => user.id)
+  @JoinColumn({ name: 'user_id' })
+  user: Users;
 
   constructor() {
     if (!this.id) {

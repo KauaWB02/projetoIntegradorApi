@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { IUser } from '../../../../interfaces/user/user.interface';
-import { IReturn } from '../../../../interfaces/user/return.interface';
+import { IReturn } from '../../../../interfaces/return.interface';
 import { UserModel } from '../../../../database/userModel';
 import bcrypt = require('bcrypt');
 

@@ -14,7 +14,7 @@ export class CreateTableEvents1685304678435 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'id_user',
+            name: 'user_id',
             type: 'varchar',
             isNullable: false,
           },
@@ -52,7 +52,7 @@ export class CreateTableEvents1685304678435 implements MigrationInterface {
             type: 'varchar',
           },
           {
-            name: 'third_teams',
+            name: 'third_place',
             type: 'varchar',
           },
           {

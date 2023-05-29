@@ -1,8 +1,9 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToMany, JoinColumn } from 'typeorm';
 import { v4 as uuid } from 'uuid';
+import { Events } from './Event';
 
 @Entity()
-export class User {
+export class Users {
   @PrimaryColumn()
   id: string;
 
@@ -23,6 +24,10 @@ export class User {
 
   @Column()
   deleted_at: string;
+
+  @OneToMany(() => Events, (event) => event.userId)
+  @JoinColumn({ name: 'user_id' })
+  events: Events[];
 
   constructor() {
     if (!this.id) {
