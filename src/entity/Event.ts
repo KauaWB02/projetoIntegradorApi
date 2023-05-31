@@ -16,35 +16,35 @@ export class Events {
   @Column()
   description: string;
 
-  @Column()
-  dth_start: Date;
+  @Column({ name: 'dth_start' })
+  dthStart: Date;
 
-  @Column()
-  description_switching: string;
+  @Column({ name: 'description_switching' })
+  descriptionSwitching: string;
 
-  @Column()
-  amount_teams: string;
+  @Column({ name: 'amount_teams' })
+  amountTeams: number;
 
-  @Column()
-  first_place: string;
+  @Column({ name: 'first_place' })
+  firstPlace: string;
 
-  @Column()
-  second_place: string;
+  @Column({ name: 'second_place' })
+  secondPlace: string;
 
-  @Column()
-  third_place: string;
+  @Column({ name: 'third_place' })
+  thirdPlace: string;
 
   @Column()
   ended: string;
 
-  @Column()
-  ended_at: Date;
+  @Column({ name: 'ended_at' })
+  endedAt: Date;
 
-  @Column()
-  created_at: Date;
+  @Column({ name: 'created_at' })
+  createdAt: Date;
 
-  @Column()
-  updated_at: Date;
+  @Column({ name: 'updated_at' })
+  updatedAt: Date;
 
   @ManyToOne(() => Users, (user) => user.id)
   @JoinColumn({ name: 'user_id' })

@@ -30,7 +30,7 @@ export class CreateTableEvents1685304678435 implements MigrationInterface {
           },
           {
             name: 'dth_start',
-            type: 'varchar',
+            type: 'timestamp',
             isNullable: false,
           },
           {
@@ -40,20 +40,23 @@ export class CreateTableEvents1685304678435 implements MigrationInterface {
           },
           {
             name: 'amount_teams',
-            type: 'varchar',
+            type: 'int',
             isNullable: false,
           },
           {
             name: 'first_place',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'second_place',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'third_place',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'ended',
@@ -64,6 +67,7 @@ export class CreateTableEvents1685304678435 implements MigrationInterface {
           {
             name: 'ended_at',
             type: 'timestamp',
+            isNullable: true,
           },
           {
             name: 'created_at',
