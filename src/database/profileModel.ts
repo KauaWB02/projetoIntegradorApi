@@ -32,6 +32,32 @@ export class ProfileModel {
     }
   }
 
+  public async findOneById(id: string): Promise<IProfile> {
+    try {
+
+      const profile = await this.conn.findOneBy({
+        id: id,
+      });
+
+
+      const data: IProfile = {
+        id: profile.id,
+        name: profile.name,
+        createdAt: profile.created_at,
+        updatedAt: profile.updated_at,
+      };
+
+      return data;
+    } catch (e) {
+      console.log(e);
+      throw {
+        message: 'Ocorreu um erro ao tentar buscar por usuário',
+        status: 500,
+      };
+    }
+  }
+
+
   public async findOneByName(name: string): Promise<IProfile> {
     try {
       const profile = await this.conn.findOneBy({
@@ -46,6 +72,7 @@ export class ProfileModel {
 
       return data;
     } catch (e) {
+      console.log(e);
       throw {
         message: 'Ocorreu um erro ao tentar buscar por usuário',
         status: 500,

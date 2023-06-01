@@ -5,7 +5,7 @@ import { IProfile } from '../../../../interfaces/profile/profile';
 
 @Injectable()
 export class ProfileService {
-  constructor(private readonly profileModel: ProfileModel) {}
+  constructor(private readonly profileModel: ProfileModel) { }
 
   async findAllProfiles(): Promise<IReturn> {
     const objectReturn: IReturn = {
@@ -29,19 +29,18 @@ export class ProfileService {
     }
   }
 
-  async findOneByName(body: IProfile): Promise<IReturn> {
+  async findOneById(idProfile: string): Promise<IReturn> {
     const objectReturn: IReturn = {
       message: '',
       data: [],
     };
     try {
-      const { name } = body;
+      const id = idProfile;
+      if (!id) throw { message: 'Campo "Name" obrigatório', status: 400 };
 
-      if (!name) throw { message: 'Campo "Name" obrigatório', status: 400 };
+      const profile = await this.profileModel.findOneById(id)
 
-      const profile = await this.profileModel.findOneByName(name);
-
-      objectReturn.message = `Listando a configuração de Profile ${profile.name}`;
+      objectReturn.message = `Listando a configuração de Profile ${profile.id}`;
       objectReturn.data = profile;
       return objectReturn;
     } catch (e) {
@@ -89,7 +88,7 @@ export class ProfileService {
     try {
       const { name } = body;
 
-      const data = await this.profileModel.findOneByName(name);
+      const data = await this.profileModel.findOneById(id);
 
       if (!data)
         throw { message: `Esse perfil ${name} já existe`, status: 500 };
@@ -106,6 +105,25 @@ export class ProfileService {
 
       objectReturn.message = `Atualização de perfil ${data.name}, concluida!`;
       objectReturn.data = data;
+      return objectReturn;
+    } catch (e) {
+      throw new HttpException(
+        {
+          status: e.status,
+          error: e.message,
+        },
+        e.status,
+      );
+    }
+  }
+
+  async deleteProfile(id: string): Promise<any> {
+    const objectReturn: IReturn = {
+      message: '',
+      data: [],
+    };
+    try {
+
       return objectReturn;
     } catch (e) {
       throw new HttpException(
