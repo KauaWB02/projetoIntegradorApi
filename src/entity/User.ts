@@ -1,7 +1,6 @@
 import { Entity, Column, PrimaryColumn, OneToMany, JoinColumn } from 'typeorm';
 import { v4 as uuid } from 'uuid';
 import { Events } from './Event';
-import { Profile } from './Profile';
 
 @Entity()
 export class Users {
@@ -20,7 +19,7 @@ export class Users {
   @Column()
   deleted_at: string;
 
-  @OneToMany(() => Events, (event) => event.userId)
+  @OneToMany(() => Events, (event) => event.user_id)
   @JoinColumn({ name: 'user_id' })
   events: Events[];
 

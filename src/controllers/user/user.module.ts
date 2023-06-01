@@ -9,10 +9,18 @@ import { UserService } from './service/user/user.service';
 import { UserModel } from '../../database/userModel';
 import { LoginService } from './service/login/login.service';
 import { AuthMiddleware } from '../../middleware/auth/auth.middleware';
+import { ProfileModel } from '../../database/profileModel';
+import { userProfileModel } from '../../database/userProfile';
 
 @Module({
   controllers: [UserController],
-  providers: [UserService, UserModel, LoginService],
+  providers: [
+    UserService,
+    UserModel,
+    ProfileModel,
+    userProfileModel,
+    LoginService,
+  ],
 })
 export class userModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

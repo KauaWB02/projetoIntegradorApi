@@ -1,12 +1,18 @@
 import { HttpException, Injectable } from '@nestjs/common';
+import bcrypt = require('bcrypt');
 import { IUser } from '../../../../interfaces/user/user.interface';
 import { IReturn } from '../../../../interfaces/return.interface';
 import { UserModel } from '../../../../database/userModel';
-import bcrypt = require('bcrypt');
+import { ProfileModel } from '../../../../database/profileModel';
+import { userProfileModel } from '../../../../database/userProfile';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userModel: UserModel) {}
+  constructor(
+    private readonly userModel: UserModel,
+    private readonly profileModel: ProfileModel,
+    private readonly userProfileModel: userProfileModel,
+  ) {}
 
   async getUsers(): Promise<IReturn> {
     const objectReturn: IReturn = {
@@ -71,15 +77,22 @@ export class UserService {
         throw { message: `Campo 'password' é obrigatório`, status: 400 };
       if (!type) throw { message: `Campo 'type' é obrigatório`, status: 400 };
 
+      let profile = await this.profileModel.findOneByName(type);
+
+      if (!profile) {
+        profile = await this.profileModel.createProfile(type);
+      }
+
       const saltGer = await bcrypt.genSalt(10);
 
       const cadastroUser: IUser = {
         name: name,
         email: email,
         password: await bcrypt.hash(password, saltGer),
-        type: type,
       };
       const userCreate = await this.userModel.createUser(cadastroUser);
+
+      await this.userProfileModel.linkUserToProfile(userCreate.id, profile.id);
 
       objectReturn.message = `Usuário ${userCreate.name} cadastrado`;
       objectReturn.data = userCreate;

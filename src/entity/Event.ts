@@ -7,8 +7,8 @@ export class Events {
   @PrimaryColumn()
   id: string;
 
-  @Column({ name: 'user_id' })
-  userId: string;
+  @Column()
+  user_id: string;
 
   @Column()
   title: string;
@@ -16,23 +16,23 @@ export class Events {
   @Column()
   description: string;
 
-  @Column({ name: 'dth_start' })
-  dthStart: Date;
+  @Column()
+  dth_start: Date;
 
-  @Column({ name: 'description_switching' })
-  descriptionSwitching: string;
+  @Column()
+  description_switching: string;
 
-  @Column({ name: 'amount_teams' })
-  amountTeams: number;
+  @Column()
+  amount_teams: number;
 
-  @Column({ name: 'first_place' })
-  firstPlace: string;
+  @Column()
+  FIRST_PLACE: string;
 
-  @Column({ name: 'second_place' })
-  secondPlace: string;
+  @Column()
+  second_place: string;
 
-  @Column({ name: 'third_place' })
-  thirdPlace: string;
+  @Column()
+  third_place: string;
 
   @Column()
   ended: string;
