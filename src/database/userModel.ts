@@ -55,8 +55,10 @@ export class UserModel {
         name: body.name,
         email: body.email,
         password: body.password,
-        type: body.type,
       });
+
+      
+
       await this.conn.save(user);
       return user;
     } catch (e) {
