@@ -7,4 +7,4 @@ import { ProfileModel } from '../../database/profileModel';
   controllers: [ProfileController],
   providers: [ProfileService, ProfileModel],
 })
-export class ProfileModules { }
+export class ProfileModules {}

@@ -34,11 +34,9 @@ export class ProfileModel {
 
   public async findOneById(id: string): Promise<IProfile> {
     try {
-
       const profile = await this.conn.findOneBy({
         id: id,
       });
-
 
       const data: IProfile = {
         id: profile.id,

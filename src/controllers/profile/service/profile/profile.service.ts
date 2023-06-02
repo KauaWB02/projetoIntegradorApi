@@ -5,7 +5,7 @@ import { IProfile } from '../../../../interfaces/profile/profile';
 
 @Injectable()
 export class ProfileService {
-  constructor(private readonly profileModel: ProfileModel) { }
+  constructor(private readonly profileModel: ProfileModel) {}
 
   async findAllProfiles(): Promise<IReturn> {
     const objectReturn: IReturn = {
@@ -38,7 +38,7 @@ export class ProfileService {
       const id = idProfile;
       if (!id) throw { message: 'Campo "Name" obrigatório', status: 400 };
 
-      const profile = await this.profileModel.findOneById(id)
+      const profile = await this.profileModel.findOneById(id);
 
       objectReturn.message = `Listando a configuração de Profile ${profile.id}`;
       objectReturn.data = profile;
@@ -123,7 +123,6 @@ export class ProfileService {
       data: [],
     };
     try {
-
       return objectReturn;
     } catch (e) {
       throw new HttpException(
