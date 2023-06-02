@@ -37,9 +37,7 @@ export class UserModel {
 
   public async findUserByEmail(email: string): Promise<IUser> {
     try {
-      const user = await this.conn.findOneBy({
-        email: email,
-      });
+      const user = await this.conn.findOne({ where: { email: email } });
       return user;
     } catch (e) {
       throw {

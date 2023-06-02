@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm';
 import { v4 as UUID } from 'uuid';
 import { Users } from './User';
+import { User_Profile } from './User_Profile';
 
 @Entity()
 export class Profile {
@@ -16,9 +17,9 @@ export class Profile {
   @Column()
   updated_at: Date;
 
-  @OneToMany(() => Users, (user) => user.id)
-  @JoinColumn({ name: 'user_id' })
-  users: Users[];
+  @OneToMany(() => User_Profile, (p) => p.profile)
+  @JoinColumn({ name: 'id_user' })
+  profile: User_Profile[];
 
   constructor() {
     if (!this.id) {

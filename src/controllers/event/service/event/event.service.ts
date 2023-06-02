@@ -13,31 +13,31 @@ export class EventService {
       data: [],
     };
     try {
-      // const events = await this.modelEvent.findAllEvents();
-
-      // events.map((objEvents: IEvent) => {
-      //   const templateObject: IEvent = {
-      //     id: objEvents.id,
-      //     title: objEvents.title,
-      //     description: objEvents.description,
-      //     dthStart: objEvents.dthStart,
-      //     descriptionSwitching: objEvents.descriptionSwitching,
-      //     amountTeams: objEvents.amountTeams,
-      //     firstPlace: objEvents.firstPlace,
-      //     secondPlace: objEvents.secondPlace,
-      //     thirdPlace: objEvents.thirdPlace,
-      //     ended: objEvents.ended,
-      //     endedAt: objEvents.endedAt,
-      //     createdAt: objEvents.createdAt,
-      //     updatedAt: objEvents.updatedAt,
-      //     user: {
-      //       name: objEvents.user.name,
-      //     },
-      //   };
-      //   events.push(templateObject);
-      // });
-      // objectReturn.message = 'Listando Eventos!';
-      // objectReturn.data = events;
+      const events = await this.modelEvent.findAllEvents();
+      const teste: Array<IEvent> = [];
+      events.map((objEvents) => {
+        const templateObject: IEvent = {
+          id: objEvents.id,
+          title: objEvents.title,
+          description: objEvents.description,
+          dthStart: objEvents.dth_start,
+          descriptionSwitching: objEvents.description_switching,
+          amountTeams: objEvents.amount_teams,
+          firstPlace: objEvents.FIRST_PLACE,
+          secondPlace: objEvents.second_place,
+          thirdPlace: objEvents.third_place,
+          ended: objEvents.ended,
+          endedAt: objEvents.endedAt,
+          createdAt: objEvents.createdAt,
+          updatedAt: objEvents.updatedAt,
+          user: {
+            name: objEvents.user.name,
+          },
+        };
+        teste.push(templateObject);
+      });
+      objectReturn.message = 'Listando Eventos!';
+      objectReturn.data = events;
       return objectReturn;
     } catch (e) {
       throw new HttpException(

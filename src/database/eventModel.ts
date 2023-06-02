@@ -13,11 +13,11 @@ export class EventModel {
 
   public async findAllEvents() {
     try {
-      // const events: Array<IEvent> = await this.conn.find({
-      //   relations: { user: true },
-      // });
+      const events = await this.conn.find({
+        relations: { user: true },
+      });
 
-      // return events;
+      return events;
     } catch (e) {
       console.log(e);
       throw {

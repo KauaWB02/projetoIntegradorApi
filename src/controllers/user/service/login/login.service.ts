@@ -31,29 +31,17 @@ export class LoginService {
           status: 400,
         };
 
-      if (user.type === 'D')
-        throw {
-          message: `Usuário está desativado, caso não foi você este em contato com suporte`,
-          status: 403,
-        };
-
-      if (!bcrypt.compareSync(password, user.password)) {
-        if (!user)
-          throw {
-            message: `E-mail ou senha incorretas, favor verificar`,
-            status: 400,
-          };
+      if (bcrypt.compareSync(password, user.password)) {
+        const token = jwt.sign(
+          { id: user.id, email: user.email },
+          keyJwt.secret,
+          { expiresIn: '2m' },
+        );
+        console.log(user);
+        objectReturn.message = `Usuário ${user.name}, Logado!`;
+        objectReturn.data = { id: user.id, name: user.name, token: token };
+        return objectReturn;
       }
-
-      const token = jwt.sign(
-        { id: user.id, email: user.email },
-        keyJwt.secret,
-        { expiresIn: '3h' },
-      );
-
-      objectReturn.message = `Usuário ${user.name}, Logado!`;
-      objectReturn.data = { id: user.id, name: user.name, token: token };
-      return objectReturn;
     } catch (e) {
       throw new HttpException(
         {
