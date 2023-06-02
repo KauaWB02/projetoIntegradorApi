@@ -26,8 +26,8 @@ export class Events {
   amount_teams: number;
 
   @Column()
-  FIRST_PLACE: string;
-
+  first_place: string;
+  
   @Column()
   second_place: string;
 

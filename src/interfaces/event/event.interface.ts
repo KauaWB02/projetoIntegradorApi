@@ -2,6 +2,7 @@ import { IUser } from '../user/user.interface';
 
 export interface IEvent {
   id: string;
+  userId: string;
   title: string;
   description: string;
   dthStart: Date;
@@ -14,5 +15,5 @@ export interface IEvent {
   endedAt: Date;
   createdAt: Date;
   updatedAt: Date;
-  user: IUser;
+  user?: IUser;
 }
