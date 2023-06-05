@@ -1,5 +1,6 @@
 import { IEvent } from './event/event.interface';
 import { IProfile } from './profile/profile';
+import { ITeams } from './team/teams.interface';
 import { ILoginReturn } from './user/login/loginReturn.interface';
 import { IUser } from './user/user.interface';
 
@@ -12,5 +13,7 @@ export interface IReturn {
     | IEvent
     | Array<IEvent>
     | Array<IProfile>
-    | IProfile;
+    | IProfile
+    | Array<ITeams>
+    | ITeams;
 }
