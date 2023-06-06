@@ -10,6 +10,9 @@ export class team {
   name: string;
 
   @Column()
+  description: string;
+
+  @Column()
   leader: string;
 
   @Column()
@@ -20,7 +23,9 @@ export class team {
 
   @Column()
   updated_at: Date;
-    description: string;
+
+
+
 
   constructor() {
     if (!this.id) {

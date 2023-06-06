@@ -46,4 +46,55 @@ export class teamModel {
         }
 
     }
+    public async updateTeam(data: ITeams, idTeam: string): Promise<boolean> {
+        try {
+          let update = false;
+          const user = await this.conn.update({ id: idTeam }, data);
+          if (!Array.isArray(user)) {
+            if (user.affected == 1) {
+              update = true;
+            }
+          }
+          return update;
+        } catch (e) {
+          throw {
+            message: 'Ocorreu um erro ao tentar atualizar usuário',
+            status: 500,
+          };
+        }
+      }
+    public async selectById(idTeam: string): Promise<team> {
+
+        try {
+            const teams = await this.conn.findOneBy({id: idTeam})
+           
+            return teams;
+
+        } catch (error) {
+            console.log(error);
+            throw {
+                message: 'Ocorreu um erro ao tentar buscar por times',
+                status: 500,
+            };
+        }
+
+    }
+    public async deleteTeam(idTeam: string): Promise<any> {
+        try {
+          let update = false;
+
+          const profile = await this.conn.delete({ id: idTeam });
+          if (!Array.isArray(profile)) {
+            if (profile.affected == 1) {
+              update = true;
+            }
+          }
+          return update;
+        } catch (e) {
+          throw {
+            message: 'Ocorreu um erro ao tentar atualizar usuário',
+            status: 500,
+          };
+        }
+      }
 }

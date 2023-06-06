@@ -45,6 +45,90 @@ export class TeamService {
             );
         }
     }
+
+    async updateTeam(body: ITeams, idTeam: string, idUser: string ): Promise<IReturn> {
+        const objectReturn: IReturn = {
+            message: '',
+            data: [],
+        };
+        try {
+            console.log(idTeam)
+            const {name, logo, description} = body
+            
+
+
+
+            const teams = await this.teamModel.selectById(idTeam);
+
+            if(!teams)
+            throw { message: `Esse time não existe`, status: 400 };
+
+
+            if(teams.leader !== idUser)
+            throw { message: `Você não tem permissão para isso`, status: 400 };
+
+            teams.name = name || teams.name;
+            teams.logo = logo || teams.logo;
+            teams.description = description || teams.description;
+            const update = await this.teamModel.updateTeam(body, idTeam)
+
+            if (!update)
+              throw {
+                message: `Algo aconteceu ao tentar atualizar o time [${teams.name}]`,
+                status: 500,
+              };
+
+
+            objectReturn.message = 'Time atualizado';
+            objectReturn.data = teams;
+            return objectReturn;
+        } catch (e) {
+            console.log(e)
+            throw new HttpException(
+                {
+                    status: e.status,
+                    error: e.message,
+                },
+                e.status,
+            );
+        }
+    }
+
+    async getByIdTeam(idTeam: string): Promise<IReturn> {
+      const objectReturn: IReturn = {
+          message: '',
+          data: [],
+      };
+      try {
+          const teams = await this.teamModel.selectById(idTeam);
+          const teamsData: ITeams = {
+                  id: teams.id,
+                  name: teams.name,
+                  description: teams.description,
+                  leader: teams.leader,
+                  logo: teams.logo,
+                  createdAt: teams.created_at,
+                  updatedAt: teams.updated_at
+              };
+             
+          
+
+
+          objectReturn.message = `Time selecionado ${teams.name}` ;
+          objectReturn.data = teamsData;
+          return objectReturn;
+      } catch (e) {
+          throw new HttpException(
+              {
+                  status: e.status,
+                  error: e.message,
+              },
+              e.status,
+          );
+      }
+  }
+
+
     async createTeam(body: ITeams): Promise<IReturn> {
         const objectReturn: IReturn = {
           message: '',
@@ -84,4 +168,29 @@ export class TeamService {
           );
         }
       }
+
+      async deleteTeam(idTeam: string): Promise<IReturn> {
+        const objectReturn: IReturn = {
+            message: '',
+            data: [],
+        };
+        try {
+            const teams = await this.teamModel.deleteTeam(idTeam);
+            if (!teams)
+              throw {
+                message: `Algo aconteceu ao tentar excluir o time [${idTeam}]`,
+                status: 500,
+              };
+            objectReturn.message = `Time excluido ${idTeam}` ;
+            return objectReturn;
+        } catch (e) {
+            throw new HttpException(
+                {
+                    status: e.status,
+                    error: e.message,
+                },
+                e.status,
+            );
+        }
+    }
 }
