@@ -29,7 +29,7 @@ export class UserModel {
       return user;
     } catch (e) {
       throw {
-        message: 'Ocorreu um erro ao tentar buscar por usuário',
+        message: 'Ocorreu um erro ao tentar buscar por usuário tt',
         status: 500,
       };
     }

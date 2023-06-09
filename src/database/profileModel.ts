@@ -32,20 +32,13 @@ export class ProfileModel {
     }
   }
 
-  public async findOneById(id: string): Promise<IProfile> {
+  public async findOneById(id: string): Promise<Profile> {
     try {
       const profile = await this.conn.findOneBy({
         id: id,
       });
 
-      const data: IProfile = {
-        id: profile.id,
-        name: profile.name,
-        createdAt: profile.created_at,
-        updatedAt: profile.updated_at,
-      };
-
-      return data;
+      return profile;
     } catch (e) {
       console.log(e);
       throw {
@@ -55,14 +48,13 @@ export class ProfileModel {
     }
   }
 
-
-  public async findOneByName(name: string): Promise<IProfile| null > {
+  public async findOneByName(name: string): Promise<IProfile | null> {
     try {
       const profile = await this.conn.findOneBy({
         name: name,
       });
 
-      if(!profile) return null
+      if (!profile) return null;
 
       const data: IProfile = {
         id: profile.id,

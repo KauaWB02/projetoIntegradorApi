@@ -31,9 +31,16 @@ export class userProfileModel {
     try {
       const query = this.conn
         .createQueryBuilder('user_profile')
-        .leftJoinAndSelect('user_profile.profile', 'profile')
+        .leftJoinAndSelect(
+          'user_profile.profile',
+          'p',
+          'user_profile.id_profile = p.id',
+        )
         .where('user_profile.id_user = :id_user', { id_user: id })
+        .andWhere('user_profile.active <> :active', { active: true })
+        .andWhere('user_profile.status <> :status', { status: 'D' })
         .getMany();
+      console.log(query);
       const linkProfile = await query;
       return linkProfile;
     } catch (e) {
@@ -45,6 +52,19 @@ export class userProfileModel {
     }
   }
 
+  public async findOneUserProfile(id: string) {
+    try {
+      const query = this.conn.findOneBy({ id: id });
+      const linkProfile = await query;
+      return linkProfile;
+    } catch (e) {
+      console.log(e);
+      throw {
+        message: 'Ocorreu um erro ao tentar buscar por usuário',
+        status: 500,
+      };
+    }
+  }
   public async profileSelectedUser(
     idSelected: string,
     idUser: string,

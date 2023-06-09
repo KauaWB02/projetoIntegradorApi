@@ -32,13 +32,11 @@ export class LoginService {
         };
 
       if (bcrypt.compareSync(password, user.password)) {
-        const token = jwt.sign(
-          { id: user.id, email: user.email },
-          keyJwt.secret,
-          { expiresIn: '2m' },
-        );
+        const token = jwt.sign({ selectedProfile: true }, keyJwt.secret, {
+          expiresIn: '2m',
+        });
         console.log(user);
-        objectReturn.message = `Usuário ${user.name}, Logado!`;
+        objectReturn.message = `Usuário ${user.name}, Agora selecione um perfil!`;
         objectReturn.data = { id: user.id, name: user.name, token: token };
         return objectReturn;
       }

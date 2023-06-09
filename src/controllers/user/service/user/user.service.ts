@@ -70,7 +70,6 @@ export class UserService {
     };
     try {
       const { name, email, password, type } = body;
-      console.log(body)
       if (!name) throw { message: `Campo 'name' é obrigatório`, status: 400 };
       if (!email)
         throw { message: `Campo 'e-mail' é obrigatório`, status: 400 };

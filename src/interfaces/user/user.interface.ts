@@ -1,3 +1,5 @@
+import { IProfile } from '../profile/profile';
+
 export interface IUser {
   id?: string;
   name?: string;
@@ -6,4 +8,5 @@ export interface IUser {
   deleted_user?: string;
   type?: string;
   deleted_at?: string;
+  profile?: IProfile;
 }
