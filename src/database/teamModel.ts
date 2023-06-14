@@ -12,7 +12,7 @@ export class teamModel {
 
         try {
 
-            const teams = this.conn.find()
+            const teams = await this.conn.find()
             return teams;
 
         } catch (error) {
@@ -34,7 +34,7 @@ export class teamModel {
                 leader: body.leader,
                 logo: body.logo
             })
-            this.conn.save(teams)
+            await this.conn.save(teams)
             return teams;
 
         } catch (error) {

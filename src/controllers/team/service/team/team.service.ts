@@ -2,10 +2,18 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { IReturn } from '../../../../interfaces/return.interface';
 import { ITeams } from '../../../../interfaces/team/teams.interface';
 import { teamModel } from '../../../../database/teamModel';
+import { userTeamModel } from '../../../../database/userTeam';
+import { UserModel } from '../../../../database/userModel';
+import { user_team } from '../../../../entity/user_team';
 
 @Injectable()
 export class TeamService {
-  constructor(private readonly teamModel: teamModel) {}
+
+  constructor(
+    private readonly teamModel: teamModel,
+    private readonly userTeamModel: userTeamModel,
+    private readonly userModel: UserModel) {}
+
   async getTeams(): Promise<IReturn> {
     const objectReturn: IReturn = {
       message: '',
@@ -181,4 +189,99 @@ export class TeamService {
       );
     }
   }
+
+  async getAllUserInvites(id:string): Promise<IReturn> {
+    const objectReturn: IReturn = {
+      message: '',
+      data: [],
+    };
+    try {
+      
+      if (!id)
+      throw {
+        message: `campo id precisa ser inserido`,
+        status: 400,
+      };
+
+      const user = await this.userModel.findUserById(id);
+
+      
+
+      if (!user)
+      throw {
+        message: `usuário não encontrado`,
+        status: 400,
+      };
+
+
+      const invites = await this.userTeamModel.selectInvites(id);
+      objectReturn.message = `buscando convites`;
+      objectReturn.data = invites;
+      return objectReturn;
+    } catch (e) {
+      throw new HttpException(
+        {
+          status: e.status,
+          error: e.message,
+        },
+        e.status,
+      );
+    }
+  }
+
+  async sendUserInvite(body:user_team): Promise<IReturn> {
+    const objectReturn: IReturn = {
+      message: '',
+      data: [],
+    };
+    try {
+      
+      if (!body.id_user)
+      throw {
+        message: `campo id_user precisa ser inserido`,
+        status: 400,
+      };
+
+      if (!body.id_team)
+      throw {
+        message: `campo id_team precisa ser inserido`,
+        status: 400,
+      };
+
+
+      const user = await this.userModel.findUserById(body.id_user);
+
+      const team = await this.teamModel.selectById(body.id_team)
+
+      if (!user)
+      throw {
+        message: `usuário não encontrado`,
+        status: 400,
+      };
+
+      if (!team)
+      throw {
+        message: `time não encontrado`,
+        status: 400,
+      };
+
+
+
+
+
+      const invite = await this.userTeamModel.sendInvite(body)
+      objectReturn.message = `enviando convite`;
+      objectReturn.data = invite;
+      return objectReturn;
+    } catch (e) {
+      throw new HttpException(
+        {
+          status: e.status,
+          error: e.message,
+        },
+        e.status,
+      );
+    }
+  }
+
 }
