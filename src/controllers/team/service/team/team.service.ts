@@ -12,7 +12,7 @@ export class TeamService {
   constructor(
     private readonly teamModel: teamModel,
     private readonly userTeamModel: userTeamModel,
-    private readonly userModel: UserModel) {}
+    private readonly userModel: UserModel) { }
 
   async getTeams(): Promise<IReturn> {
     const objectReturn: IReturn = {
@@ -190,28 +190,28 @@ export class TeamService {
     }
   }
 
-  async getAllUserInvites(id:string): Promise<IReturn> {
+  async getAllUserInvites(id: string): Promise<IReturn> {
     const objectReturn: IReturn = {
       message: '',
       data: [],
     };
     try {
-      
+
       if (!id)
-      throw {
-        message: `campo id precisa ser inserido`,
-        status: 400,
-      };
+        throw {
+          message: `campo id precisa ser inserido`,
+          status: 400,
+        };
 
       const user = await this.userModel.findUserById(id);
 
-      
+
 
       if (!user)
-      throw {
-        message: `usuário não encontrado`,
-        status: 400,
-      };
+        throw {
+          message: `usuário não encontrado`,
+          status: 400,
+        };
 
 
       const invites = await this.userTeamModel.selectInvites(id);
@@ -229,24 +229,24 @@ export class TeamService {
     }
   }
 
-  async sendUserInvite(body:user_team): Promise<IReturn> {
+  async sendUserInvite(body: user_team): Promise<IReturn> {
     const objectReturn: IReturn = {
       message: '',
       data: [],
     };
     try {
-      
+
       if (!body.id_user)
-      throw {
-        message: `campo id_user precisa ser inserido`,
-        status: 400,
-      };
+        throw {
+          message: `campo id_user precisa ser inserido`,
+          status: 400,
+        };
 
       if (!body.id_team)
-      throw {
-        message: `campo id_team precisa ser inserido`,
-        status: 400,
-      };
+        throw {
+          message: `campo id_team precisa ser inserido`,
+          status: 400,
+        };
 
 
       const user = await this.userModel.findUserById(body.id_user);
@@ -254,24 +254,64 @@ export class TeamService {
       const team = await this.teamModel.selectById(body.id_team)
 
       if (!user)
-      throw {
-        message: `usuário não encontrado`,
-        status: 400,
-      };
+        throw {
+          message: `usuário não encontrado`,
+          status: 400,
+        };
 
       if (!team)
-      throw {
-        message: `time não encontrado`,
-        status: 400,
-      };
-
-
-
-
+        throw {
+          message: `time não encontrado`,
+          status: 400,
+        };
 
       const invite = await this.userTeamModel.sendInvite(body)
       objectReturn.message = `enviando convite`;
       objectReturn.data = invite;
+      return objectReturn;
+    } catch (e) {
+      throw new HttpException(
+        {
+          status: e.status,
+          error: e.message,
+        },
+        e.status,
+      );
+    }
+  }
+
+  async acceptUserInvite(idInvite: string): Promise<IReturn> {
+    const objectReturn: IReturn = {
+      message: '',
+      data: [],
+    };
+    try {
+
+      if (!idInvite)
+        throw {
+          message: `Parametro na URL está faltando!`,
+          status: 400,
+        };
+
+      // const user = await this.userModel.findUserById(idInvite);
+
+      // if (!user)
+      //   throw {
+      //     message: `usuário não encontrado`,
+      //     status: 400,
+      //   };
+
+      const accept = await this.userTeamModel.acceptInvite(idInvite);
+
+
+      if (!accept)
+        throw {
+          message: `Algo aconteceu, contate um Adm`,
+          status: 500,
+        };
+
+
+      objectReturn.message = `Convite aceito!.`;
       return objectReturn;
     } catch (e) {
       throw new HttpException(

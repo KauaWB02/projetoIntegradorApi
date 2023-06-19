@@ -79,6 +79,7 @@ export class teamModel {
         }
 
     }
+    
     public async deleteTeam(idTeam: string): Promise<any> {
         try {
           let update = false;

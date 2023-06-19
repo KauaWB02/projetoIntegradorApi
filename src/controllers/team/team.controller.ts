@@ -15,7 +15,7 @@ import { user_team } from '../../entity/user_team';
 
 @Controller('team')
 export class TeamController {
-  constructor(private readonly teamService: TeamService) {}
+  constructor(private readonly teamService: TeamService) { }
 
   @Get()
   async findTeams(): Promise<IReturn> {
@@ -54,5 +54,10 @@ export class TeamController {
   @Post('send/invite')
   async sendInvite(@Body() body: user_team): Promise<IReturn> {
     return this.teamService.sendUserInvite(body)
+  }
+
+  @Get('accept/invite/:idInvite')
+  async acceptInvite(@Param('idInvite') idInvite: string): Promise<IReturn> {
+    return this.teamService.acceptUserInvite(idInvite);
   }
 }
